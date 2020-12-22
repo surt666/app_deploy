@@ -18,7 +18,7 @@ Parameters:
 
   SyncVersion:
     Type: String
-    Default: '00000024'  
+    Default: '00000026'  
 
 Resources:
   LambdaExecutionRole:
