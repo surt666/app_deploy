@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Initial nnedl base setup
+
+Parameters:
+  Environment:
+    Type: String
+    Description: Name of the environment
+
+  ProjectName:
+    Type: String
+    Description: Name of the project - to be used for naming.
+
+
+Resources:
+   Command:
+    Type: "NNEDL::LAMBDA::PGENSYNC::MODULE"
+    Properties:
+      ProjectName: !Ref ProjectName
+      Environment: !Ref Environment
+
+  Search:
+    Type: "NNEDL::LAMBDA::SEARCH::MODULE"
+    Properties:
+      ProjectName: !Ref ProjectName
+      Environment: !Ref Environment
