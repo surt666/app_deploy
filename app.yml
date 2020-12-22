@@ -14,11 +14,11 @@ Parameters:
 
   SearchVersion:
     Type: String
-    Default: '00000011'
+    Default: '00000014'
 
   SyncVersion:
     Type: String
-    Default: '00000020'  
+    Default: '00000023'  
 
 Resources:
   LambdaExecutionRole:
