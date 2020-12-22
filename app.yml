@@ -63,7 +63,8 @@ Resources:
                   res = {'status': 'OK'}
                   cfnres = cfnresponse.SUCCESS
               except Exception as error:
-                  res = {'error': error}
+                  print(error)
+                  res = {'error': 'Error'}
                   cfnres = cfnresponse.FAILED
               cfnresponse.send(event, context, cfnres, res)
       Runtime: python3.8
@@ -73,7 +74,7 @@ Resources:
     Properties:
       ServiceToken: !GetAtt SetVersionsFunction.Arn
       SyncVersion: !Ref SyncVersion
-      SearchVerison: !Ref SearchVersion
+      SearchVersion: !Ref SearchVersion
 
 
   Command:
