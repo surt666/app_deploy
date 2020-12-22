@@ -12,7 +12,7 @@ Parameters:
 
 
 Resources:
-   Command:
+  Command:
     Type: "NNEDL::LAMBDA::PGENSYNC::MODULE"
     Properties:
       ProjectName: !Ref ProjectName
