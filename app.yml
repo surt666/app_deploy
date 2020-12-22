@@ -51,12 +51,12 @@ Resources:
               print(event)
               try:
                   resp = cfn.set_type_default_version(
-                      Type=MODULE',
+                      Type='MODULE',
                       TypeName='NNEDL::LAMBDA::PGENSYNC::MODULE',
                       VersionId=event['ResourceProperties']['SyncVersion']
                   )       
                   resp = cfn.set_type_default_version(
-                      Type=MODULE',
+                      Type='MODULE',
                       TypeName='NNEDL::LAMBDA::SEARCH::MODULE',
                       VersionId=event['ResourceProperties']['SearchVersion']
                   )       
