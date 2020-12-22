@@ -12,15 +12,80 @@ Parameters:
     Description: Name of the project - to be used for naming.
     Default: TEST
 
+  SearchVersion:
+    Type: String
+    Default: 8 
+
+  SyncVersion:
+    Type: String
+    Default: 17  
+
 Resources:
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal: {Service: [lambda.amazonaws.com]}
+          Action: ['sts:AssumeRole']
+      Path: "/"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AWSCloudFormationFullAccess
+      
+  SetVersionsFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ZipFile: |          
+          import cfnresponse
+          import boto3
+
+          cfn = boto3.client('cloudformation')
+         
+          def lambda_handler(event, context):
+              print(event)
+              try:
+                  resp = cfn.set_type_default_version(
+                      Type=MODULE',
+                      TypeName='NNEDL::LAMBDA::PGENSYNC::MODULE',
+                      VersionId=event['ResourceProperties']['SyncVersion']
+                  )       
+                  resp = cfn.set_type_default_version(
+                      Type=MODULE',
+                      TypeName='NNEDL::LAMBDA::SEARCH::MODULE',
+                      VersionId=event['ResourceProperties']['SearchVersion']
+                  )       
+                  res = {'status': 'OK'}
+                  cfnres = cfnresponse.SUCCESS
+              except Exception as error:
+                  res = {'error': error}
+                  cfnres = cfnresponse.FAILED
+              cfnresponse.send(event, context, cfnres, res)
+      Runtime: python3.8
+
+  SetVersions:
+    Type: Custom::SetVersions
+    Properties:
+      ServiceToken: !GetAtt SetVersionsFunction.Arn
+      SyncVersion: !Ref SyncVersion
+      SearchVerison: !Ref SearchVersion
+
+
   Command:
     Type: "NNEDL::LAMBDA::PGENSYNC::MODULE"
+    DependsOn: SetVersions
     Properties:
       ProjectName: !Ref ProjectName
       Environment: !Ref Environment
 
   Search:
     Type: "NNEDL::LAMBDA::SEARCH::MODULE"
+    DependsOn: SetVersions
     Properties:
       ProjectName: !Ref ProjectName
       Environment: !Ref Environment
