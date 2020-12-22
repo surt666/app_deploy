@@ -5,11 +5,12 @@ Parameters:
   Environment:
     Type: String
     Description: Name of the environment
+    Default: devzqsl
 
   ProjectName:
     Type: String
     Description: Name of the project - to be used for naming.
-
+    Default: TEST
 
 Resources:
   Command:
