@@ -18,7 +18,7 @@ Parameters:
 
   SyncVersion:
     Type: String
-    Default: '00000026'  
+    Default: 'latest' #'00000026'  
 
 Resources:
   LambdaExecutionRole:
@@ -50,16 +50,18 @@ Resources:
           def lambda_handler(event, context):
               print(event)
               try:
-                  resp = cfn.set_type_default_version(
-                      Type='MODULE',
-                      TypeName='NNEDL::LAMBDA::PGENSYNC::MODULE',
-                      VersionId=event['ResourceProperties']['SyncVersion']
-                  )       
-                  resp = cfn.set_type_default_version(
-                      Type='MODULE',
-                      TypeName='NNEDL::LAMBDA::SEARCH::MODULE',
-                      VersionId=event['ResourceProperties']['SearchVersion']
-                  )       
+                  if event['ResourceProperties']['SyncVersion'] != 'latest':
+                      resp = cfn.set_type_default_version(
+                          Type='MODULE',
+                          TypeName='NNEDL::LAMBDA::PGENSYNC::MODULE',
+                          VersionId=event['ResourceProperties']['SyncVersion']
+                      ) 
+                  if event['ResourceProperties']['SearchVersion'] != 'latest':      
+                      resp = cfn.set_type_default_version(
+                          Type='MODULE',
+                          TypeName='NNEDL::LAMBDA::SEARCH::MODULE',
+                          VersionId=event['ResourceProperties']['SearchVersion']
+                      )       
                   res = {'status': 'OK'}
                   cfnres = cfnresponse.SUCCESS
               except Exception as error:
