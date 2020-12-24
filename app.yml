@@ -14,7 +14,7 @@ Parameters:
 
   SearchVersion:
     Type: String
-    Default: '00000015'
+    Default: 'latest' #'00000015'
 
   SyncVersion:
     Type: String
